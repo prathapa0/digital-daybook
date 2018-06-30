@@ -2,9 +2,7 @@ package np.com.prathapa.digitaldaybook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,10 +14,10 @@ import com.activeandroid.ActiveAndroid;
 import java.util.ArrayList;
 
 import np.com.prathapa.digitaldaybook.main_activity.MainActivity;
+import np.com.prathapa.digitaldaybook.model.DaybookName;
 import np.com.prathapa.digitaldaybook.model.DaybookNameModel;
 
-import static np.com.prathapa.digitaldaybook.util.StringClass.PASSWORD;
-import static np.com.prathapa.digitaldaybook.util.StringClass.USERNAME;
+import static np.com.prathapa.digitaldaybook.util.StringClass.DAYBOOK_NAME;
 
 public class LoginActivity extends AppCompatActivity {
     Context context = LoginActivity.this;
@@ -49,9 +47,24 @@ public class LoginActivity extends AppCompatActivity {
                 String password = String.valueOf(mPassword.getText()).trim();
                 ArrayList<DaybookNameModel> list = (ArrayList<DaybookNameModel>) new DaybookNameModel().getListOfDaybookNames();
                 for (DaybookNameModel e : list) {
-                    System.err.println(e.daybookName + " ---> " + e.password);
                     if (name.equals(e.daybookName) && password.equals(e.password)) {
-                        startActivity(new Intent(context, MainActivity.class));
+                        Intent intent = new Intent(context, MainActivity.class);
+                        DaybookName daybookName = new DaybookName();
+                        daybookName.setDaybookName(e.daybookName);
+                        ArrayList<String> personNameList = new ArrayList<>();
+                        StringBuilder personName = new StringBuilder();
+                        for (int i = 0; i < e.personNames.length(); i++) {
+                            char character = e.personNames.charAt(i);
+                            if (character == ',') {
+                                personNameList.add(personName.toString());
+                                personName = new StringBuilder();
+                            } else {
+                                personName.append(character);
+                            }
+                        }
+                        daybookName.setPersonNames(personNameList);
+                        intent.putExtra(DAYBOOK_NAME, daybookName);
+                        startActivity(intent);
                     }
                 }
             }

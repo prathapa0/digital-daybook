@@ -3,13 +3,10 @@ package np.com.prathapa.digitaldaybook;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -96,9 +93,10 @@ public class RegistrationActivity extends AppCompatActivity {
         daybookNameModel.daybookName = daybookName;
         daybookNameModel.password = password;
         daybookNameModel.personNames = names;
-        try{
-            daybookNameModel.save();
-        }catch (Exception e){
+        long value = daybookNameModel.save();
+        if (value == 1) {
+            showSnackbar("Registration Successful!!");
+        } else {
             showSnackbar("Daybook name already registered!! Please use other names!");
         }
     }

@@ -12,8 +12,8 @@ import java.util.List;
  */
 
 @Table(name = "DaybookName")
-public class DaybookNameModel extends Model{
-    @Column(name = "daybook_name")
+public class DaybookNameModel extends Model {
+    @Column(name = "daybook_name", unique = true)
     public String daybookName = "";
 
     @Column(name = "password")
@@ -22,8 +22,7 @@ public class DaybookNameModel extends Model{
     @Column(name = "person_names")
     public String personNames = "";
 
-
-    public List<DaybookNameModel> getListOfDaybookNames(){
+    public List<DaybookNameModel> getListOfDaybookNames() {
         return new Select().from(DaybookNameModel.class).execute();
     }
 }
