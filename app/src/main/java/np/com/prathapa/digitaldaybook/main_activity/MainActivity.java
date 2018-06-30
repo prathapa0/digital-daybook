@@ -1,6 +1,10 @@
 package np.com.prathapa.digitaldaybook.main_activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,19 +17,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import np.com.prathapa.digitaldaybook.LoginActivity;
 import np.com.prathapa.digitaldaybook.R;
 import np.com.prathapa.digitaldaybook.model.DaybookName;
 
 import static np.com.prathapa.digitaldaybook.util.StringClass.DAYBOOK_NAME;
+import static np.com.prathapa.digitaldaybook.util.StringClass.PASSWORD;
+import static np.com.prathapa.digitaldaybook.util.StringClass.USERNAME;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    Context context = MainActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DaybookName daybookName = (DaybookName) getIntent().getSerializableExtra(DAYBOOK_NAME);
+        System.err.println(daybookName.getDaybookName());
+        for (String e : daybookName.getPersonNames()) {
+            System.err.println(e);
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(daybookName.getDaybookName());
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -44,12 +59,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        DaybookName daybookName = (DaybookName) getIntent().getSerializableExtra(DAYBOOK_NAME);
-        System.err.println(daybookName.getDaybookName());
-        for (String e : daybookName.getPersonNames()) {
-            System.err.println(e);
-        }
     }
 
     @Override
@@ -77,7 +86,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(USERNAME, "");
+            editor.putString(PASSWORD, "");
+            editor.apply();
+            finish();
+            startActivity(new Intent(context, LoginActivity.class));
             return true;
         }
 
