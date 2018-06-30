@@ -17,7 +17,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+
 import java.util.ArrayList;
+
+import np.com.prathapa.digitaldaybook.model.DaybookNameModel;
 
 import static np.com.prathapa.digitaldaybook.util.StringClass.NAME_TAG;
 import static np.com.prathapa.digitaldaybook.util.StringClass.PASSWORD;
@@ -36,6 +40,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        ActiveAndroid.initialize(context);
         mDaybookName = findViewById(R.id.editTextRegistrationDaybookName);
         mPassword = findViewById(R.id.editTextRegistrationPassword);
         mConfirmPassword = findViewById(R.id.editTextRegistrationConfirmPassword);
@@ -87,7 +92,15 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void saveRegisteredAccountToDb(String daybookName, String password, String names) {
-
+        DaybookNameModel daybookNameModel = new DaybookNameModel();
+        daybookNameModel.daybookName = daybookName;
+        daybookNameModel.password = password;
+        daybookNameModel.personNames = names;
+        try{
+            daybookNameModel.save();
+        }catch (Exception e){
+            showSnackbar("Daybook name already registered!! Please use other names!");
+        }
     }
 
     private void addingNamesOfPeople() {
